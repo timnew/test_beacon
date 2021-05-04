@@ -22,5 +22,5 @@ class BeaconFinder<B extends Beacon<T>, T> extends MatchFinder {
   @override
   bool matches(Element candidate) =>
       candidate.widget is B &&
-      (criteria?.call((candidate.widget as B).tag) ?? true);
+      (criteria?.call((candidate.widget as Beacon<T>).tag) ?? true);
 }

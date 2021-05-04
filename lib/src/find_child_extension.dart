@@ -1,7 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'beacon.dart';
+import 'beacon_finder.dart';
+
 extension FindChildExtension on Finder {
+  Finder findChildBeacon<B extends Beacon>({bool skipOffstage = true}) =>
+      find.descendant(
+        of: this,
+        matching: BeaconFinder<B, dynamic>(skipOffstage: skipOffstage),
+      );
+
+  Finder findChildBeaconWhere<B extends Beacon<T>, T>(
+    BeaconTagCriteria<T> criteria, {
+    bool skipOffstage = true,
+  }) =>
+      find.descendant(
+        of: this,
+        matching: BeaconFinder<B, T>(
+          criteria: criteria,
+          skipOffstage: skipOffstage,
+        ),
+      );
+
+  Finder findChildErrorBeacon([dynamic error]) => find.descendant(
+        of: this,
+        matching: error == null
+            ? BeaconFinder<ErrorBeacon, dynamic>()
+            : BeaconFinder<ErrorBeacon, dynamic>(
+                criteria: (e) => e == error,
+                description: "ErrorBeacon with $error",
+              ),
+      );
+
+  Finder findChildContentBeacon<T>([T? content]) => find.descendant(
+        of: this,
+        matching: content == null
+            ? BeaconFinder<ContentBeacon<T>, T>()
+            : BeaconFinder<ContentBeacon<T>, T>(
+                criteria: (c) => c == content,
+                description: "ContentBeacon with $content",
+              ),
+      );
+
+  Finder findChildStateBeacon<T>(T state) => find.descendant(
+        of: this,
+        matching: BeaconFinder<StateBeacon<T>, T>(
+          criteria: (s) => s == state,
+          description: "StateBeacon with state $state",
+        ),
+      );
+
   Finder findChildBy(Finder finder) =>
       find.descendant(of: this, matching: finder);
 

@@ -5,20 +5,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'beacon_finder.dart';
 
 extension BeaconFinderExtension on CommonFinders {
-  BeaconFinder beacon<B extends Beacon>({bool skipOffstage = true}) =>
+  Finder beacon<B extends Beacon>({bool skipOffstage = true}) =>
       BeaconFinder<B, dynamic>(skipOffstage: skipOffstage);
+
+  Finder beaconWhere<B extends Beacon<T>, T>(
+    BeaconTagCriteria<T> criteria, {
+    bool skipOffstage = true,
+  }) =>
+      BeaconFinder<B, T>(
+        criteria: criteria,
+        skipOffstage: skipOffstage,
+      );
 
   Finder get inTestScope => beacon<TestScope>();
 
   Finder errorBeacon([dynamic error]) => error == null
-      ? beacon<ErrorBeacon>()
+      ? BeaconFinder<ErrorBeacon, dynamic>()
       : BeaconFinder<ErrorBeacon, dynamic>(
-          criteria: (b) => b.error == error,
+          criteria: (e) => e == error,
           description: "ErrorBeacon with $error",
         );
 
   Finder contentBeacon<T>([T? content]) => content == null
-      ? beacon<ContentBeacon<T>>()
+      ? BeaconFinder<ContentBeacon<T>, T>()
       : BeaconFinder<ContentBeacon<T>, T>(
           criteria: (c) => c == content,
           description: "ContentBeacon with $content",
@@ -33,6 +42,7 @@ extension BeaconFinderExtension on CommonFinders {
 class Beacon<T> extends StatelessWidget {
   final T? tag;
 
+  const Beacon.value(T value, {Key? key}) : this(key: key, tag: value);
   const Beacon({Key? key, this.tag}) : super(key: key);
 
   @override
