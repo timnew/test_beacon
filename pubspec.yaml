@@ -1,7 +1,7 @@
 name: test_beacon
-description: Some widget makes Flutter UI test more fun
+description: A library makes Flutter test more fun
 version: 0.1.0
-homepage:
+homepage: https://github.com/timnew/test_beacon
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
