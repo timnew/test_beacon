@@ -5,50 +5,28 @@ import 'beacon.dart';
 import 'beacon_finder.dart';
 
 extension FindChildExtension on Finder {
-  Finder findChildBeacon<B extends Beacon>({bool skipOffstage = true}) =>
-      find.descendant(
-        of: this,
-        matching: BeaconFinder<B, dynamic>(skipOffstage: skipOffstage),
-      );
-
-  Finder findChildBeaconWhere<B extends Beacon<T>, T>(
-    BeaconTagCriteria<T> criteria, {
+  Finder findChildBeacon<T>({
+    dynamic value,
+    BeaconPredicate? predicate,
     bool skipOffstage = true,
   }) =>
       find.descendant(
         of: this,
-        matching: BeaconFinder<B, T>(
-          criteria: criteria,
+        matching: find.beacon<T>(
           skipOffstage: skipOffstage,
+          value: value,
+          predicate: predicate,
         ),
       );
 
   Finder findChildErrorBeacon([dynamic error]) => find.descendant(
         of: this,
-        matching: error == null
-            ? BeaconFinder<ErrorBeacon, dynamic>()
-            : BeaconFinder<ErrorBeacon, dynamic>(
-                criteria: (e) => e == error,
-                description: "ErrorBeacon with $error",
-              ),
+        matching: find.errorBeacon(error),
       );
 
   Finder findChildContentBeacon<T>([T? content]) => find.descendant(
         of: this,
-        matching: content == null
-            ? BeaconFinder<ContentBeacon<T>, T>()
-            : BeaconFinder<ContentBeacon<T>, T>(
-                criteria: (c) => c == content,
-                description: "ContentBeacon with $content",
-              ),
-      );
-
-  Finder findChildStateBeacon<T>(T state) => find.descendant(
-        of: this,
-        matching: BeaconFinder<StateBeacon<T>, T>(
-          criteria: (s) => s == state,
-          description: "StateBeacon with state $state",
-        ),
+        matching: find.contentBeacon(content),
       );
 
   Finder findChildBy(Finder finder) =>

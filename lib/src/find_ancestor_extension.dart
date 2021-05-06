@@ -5,20 +5,16 @@ import 'beacon.dart';
 import 'beacon_finder.dart';
 
 extension FindAncestorExtension on Finder {
-  Finder findAncestorBeacon<B extends Beacon>({bool skipOffstage = true}) =>
-      find.ancestor(
-        of: this,
-        matching: BeaconFinder<B, dynamic>(skipOffstage: skipOffstage),
-      );
-
-  Finder findAncestorBeaconWhere<B extends Beacon<T>, T>(
-    BeaconTagCriteria<T> criteria, {
+  Finder findAncestorBeacon<T>({
+    dynamic value,
+    BeaconPredicate? predicate,
     bool skipOffstage = true,
   }) =>
       find.ancestor(
         of: this,
-        matching: BeaconFinder<B, T>(
-          criteria: criteria,
+        matching: find.beacon<T>(
+          value: value,
+          predicate: predicate,
           skipOffstage: skipOffstage,
         ),
       );
