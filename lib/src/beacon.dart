@@ -41,24 +41,32 @@ extension BeaconFinderExtension on CommonFinders {
 
 class Beacon<T> extends StatelessWidget {
   final T? tag;
+  final Widget? child;
 
-  const Beacon.value(T value, {Key? key}) : this(key: key, tag: value);
-  const Beacon({Key? key, this.tag}) : super(key: key);
+  const Beacon.value(
+    T value, {
+    Key? key,
+    Widget? child,
+  }) : this(key: key, tag: value, child: child);
+
+  const Beacon({
+    Key? key,
+    this.tag,
+    this.child,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Container();
+  Widget build(BuildContext context) => child ?? Container();
 }
 
 class TestScope extends Beacon<Widget> {
   const TestScope({Key? key, required Widget child})
-      : super(key: key, tag: child);
-
-  @override
-  Widget build(BuildContext context) => tag!;
+      : super(key: key, child: child);
 }
 
 class ErrorBeacon<T> extends Beacon<T> {
-  ErrorBeacon(T error, {Key? key}) : super(key: key, tag: error);
+  ErrorBeacon(T error, {Key? key, Widget? child})
+      : super(key: key, tag: error, child: child);
 
   @override
   Widget build(BuildContext context) =>
@@ -66,7 +74,8 @@ class ErrorBeacon<T> extends Beacon<T> {
 }
 
 class ContentBeacon<T> extends Beacon<T> {
-  ContentBeacon(T content, {Key? key}) : super(key: key, tag: content);
+  ContentBeacon(T content, {Key? key, Widget? child})
+      : super(key: key, child: child, tag: content);
 
   @override
   Widget build(BuildContext context) =>
@@ -74,5 +83,6 @@ class ContentBeacon<T> extends Beacon<T> {
 }
 
 class StateBeacon<T> extends Beacon<T> {
-  StateBeacon(T state, {Key? key}) : super(key: key, tag: state);
+  StateBeacon(T state, {Key? key, Widget? child})
+      : super(key: key, tag: state, child: child);
 }
